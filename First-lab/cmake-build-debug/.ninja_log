@@ -1,0 +1,10 @@
+# ninja log v5
+4	300	6671645269762291	CMakeFiles/First_lab.dir/main.cpp.obj	9b0eaef25c9e101
+1	304	6671646133331418	build.ninja	843a4a915213945
+4	338	6671646194487599	CMakeFiles/First_lab.dir/Creator.cpp.obj	11c2482632569a77
+19	359	6671646194697607	CMakeFiles/First_lab.dir/main.cpp.obj	9b0eaef25c9e101
+359	512	6671646196196090	First_lab.exe	75e3ac9c8acd0105
+5	354	6671646484519755	CMakeFiles/First_lab.dir/main.cpp.obj	9b0eaef25c9e101
+354	505	6671646486019868	First_lab.exe	75e3ac9c8acd0105
+4	421	6671648581843235	CMakeFiles/First_lab.dir/main.cpp.obj	9b0eaef25c9e101
+422	641	6671648583983380	First_lab.exe	75e3ac9c8acd0105
