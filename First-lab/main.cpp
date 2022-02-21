@@ -3,20 +3,7 @@
 #include<string>
 #include <cstdlib>
 #include "Creator.h"
-
-struct employee
-{
-private:
-    int num;
-    std::string name;
-    double hours;
-public:
-    employee(int num_, std::string name_, double hours_) {
-        num = num_;
-        name = name_;
-        hours = hours_;
-    }
-};
+#include "employee.h"
 
 int main() {
     std::cout << "Input initial filename: ";
@@ -46,10 +33,12 @@ int main() {
                     std::cin >> tempStr;
                     int num_ = atoi(tempStr.c_str());
                     std::cin >> tempStr;
-                    std::string name_ = tempStr;
+                    char *name_;
+                    strcpy(name_, tempStr.c_str());
                     std::cin >> tempStr;
                     double hours_ = atof(tempStr.c_str());
                     employee e1(num_, name_, hours_);
+                    e1;
                 }
             }
         }
