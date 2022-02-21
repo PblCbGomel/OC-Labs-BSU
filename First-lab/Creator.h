@@ -7,5 +7,6 @@
 
 void createBinFile(std::string fileName, std::ofstream& out);
 void writeOnBinFile(std::string fileName, employee elem);
+void readFromFile(std::string fileName, employee elements[], int num);
 
 #endif

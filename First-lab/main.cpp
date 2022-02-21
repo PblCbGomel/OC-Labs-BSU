@@ -37,8 +37,8 @@ int main() {
                     strcpy(name_, tempStr.c_str());
                     std::cin >> tempStr;
                     double hours_ = atof(tempStr.c_str());
-                    employee e1(num_, name_, hours_);
-                    e1;
+                    employee el(num_, name_, hours_);
+                    writeOnBinFile(initialFileName, el);
                 }
             }
         }
