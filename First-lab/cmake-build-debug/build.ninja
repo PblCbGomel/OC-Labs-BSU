@@ -49,12 +49,6 @@ cmake_ninja_workdir = D$:/OC/OC-Labs-BSU/First-lab/cmake-build-debug/
 
 build cmake_object_order_depends_target_First_lab: phony || CMakeFiles/First_lab.dir
 
-build CMakeFiles/First_lab.dir/Creator.cpp.obj: CXX_COMPILER__First_lab_Debug D$:/OC/OC-Labs-BSU/First-lab/Creator.cpp || cmake_object_order_depends_target_First_lab
-  DEP_FILE = CMakeFiles\First_lab.dir\Creator.cpp.obj.d
-  FLAGS = -g -std=gnu++98
-  OBJECT_DIR = CMakeFiles\First_lab.dir
-  OBJECT_FILE_DIR = CMakeFiles\First_lab.dir
-
 build CMakeFiles/First_lab.dir/main.cpp.obj: CXX_COMPILER__First_lab_Debug D$:/OC/OC-Labs-BSU/First-lab/main.cpp || cmake_object_order_depends_target_First_lab
   DEP_FILE = CMakeFiles\First_lab.dir\main.cpp.obj.d
   FLAGS = -g -std=gnu++98
@@ -69,7 +63,7 @@ build CMakeFiles/First_lab.dir/main.cpp.obj: CXX_COMPILER__First_lab_Debug D$:/O
 #############################################
 # Link the executable First_lab.exe
 
-build First_lab.exe: CXX_EXECUTABLE_LINKER__First_lab_Debug CMakeFiles/First_lab.dir/Creator.cpp.obj CMakeFiles/First_lab.dir/main.cpp.obj
+build First_lab.exe: CXX_EXECUTABLE_LINKER__First_lab_Debug CMakeFiles/First_lab.dir/main.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\First_lab.dir

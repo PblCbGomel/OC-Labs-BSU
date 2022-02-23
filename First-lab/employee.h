@@ -4,11 +4,16 @@
 
 struct employee
 {
-private:
+public:
     int num;
     char name[10];
     double hours;
-public:
+
+    employee() {
+        num = 0;
+        strcpy(name, "Noname");
+        hours = 0.;
+    }
     employee(int num_, const char name_[], double hours_) {
         num = num_;
         strcpy(name, name_);

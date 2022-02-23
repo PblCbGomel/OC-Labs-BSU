@@ -1,52 +1,44 @@
-#include<iostream>
-#include<fstream>
-#include<string>
-#include <cstdlib>
-#include "Creator.h"
+#include <iostream>
+#include <fstream>
+#include <conio.h>
+#include <string>
+#include <windows.h>
 #include "employee.h"
 
-int main() {
+bool createBinFile(std::string fileName, int count) {
+    STARTUPINFO si;
+    PROCESS_INFORMATION piApp;
+    ZeroMemory(&si, sizeof(STARTUPINFO));
+    si.cb = sizeof(STARTUPINFO);
+    char num[10];
+    itoa(count, num, 10);
+    std::string arg = "Creator.exe " + std::string(num) + " " + fileName;
+    char args[255];
+    strcpy(args, arg.c_str());
+    bool isStarted = CreateProcess(NULL, args, NULL,
+                                   NULL, FALSE, CREATE_NEW_CONSOLE,
+                                   NULL, NULL, &si, &piApp);
+    WaitForSingleObject(piApp.hProcess, INFINITE);
+    CloseHandle(piApp.hThread);
+    CloseHandle(piApp.hProcess);
+    return isStarted;
+}
+
+int main(int argc, char *argv[]) {
     std::cout << "Input initial filename: ";
     std::string initialFileName;
     std::cin >> initialFileName;
 
     std::ofstream out;
-    createBinFile(initialFileName, out);
 
-    if(!out.is_open()) {
-        std::cerr << "Open file failed.\n";
-        return 0;
-    } else {
-        std::cout << "File is open.\n";
-        int workTemp = 0;
-        while(workTemp != 2) {
-            std::cout << "Input 1 to input records in file, 2 to continue: ";
-            std::cin >> workTemp;
-            if(workTemp == 1) {
-                std::cout << "Input number of records what you wont to write: ";
-                int recordsNumberToWrite;
-                std::cin >> recordsNumberToWrite;
-                std::cout << "Input all records.\n";
-                for(int i = 0; i < recordsNumberToWrite; ++i) {
-                    std::cout << i + 1 << ") ";
-                    std::string tempStr;
-                    std::cin >> tempStr;
-                    int num_ = atoi(tempStr.c_str());
-                    std::cin >> tempStr;
-                    char *name_;
-                    strcpy(name_, tempStr.c_str());
-                    std::cin >> tempStr;
-                    double hours_ = atof(tempStr.c_str());
-                    employee el(num_, name_, hours_);
-                    writeOnBinFile(initialFileName, el);
-                }
-            }
-        }
-        system ("cls");
+    std::cout << "Input number of records in file: ";
+    int recordsNumber;
+    std::cin >> recordsNumber;
 
-        std::cout << "Input number of records in file: ";
-        int recordsNumber;
-        std::cin >> recordsNumber;
+    bool isCreate = createBinFile(initialFileName, recordsNumber);
+    if(isCreate) {
+        system("cls");
+        std::cout << "File " << initialFileName << " created.";
     }
 
     system("pause");

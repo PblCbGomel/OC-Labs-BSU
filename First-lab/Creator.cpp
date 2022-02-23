@@ -1,18 +1,24 @@
 #include<iostream>
 #include<fstream>
 #include<string>
+#include <cstdlib>
 #include "employee.h"
 
-void createBinFile(std::string fileName, std::ofstream& out) {
-    out.open(fileName.c_str(), std::ios::binary|std::ios::app);
-}
+int main(int argc, char** argv){
+    int n = atoi(argv[1]);
+    employee* emps = new employee[n];
+    for(int i = 0; i < n; i++){
+        std::cout << "Input number, name and hours of working of employee: ";
+        int num;
+        std::cin >> num;
+        std::string name;
+        std::cin >> name;
+        double h;
+        std::cin >> h;
+        emps[i] = employee(num, name.c_str(), h);
+    }
 
-void writeOnBinFile(std::string fileName, employee elem) {
-    std::ofstream out(fileName.c_str(), std::ios::binary|std::ios::app);
-    out.write((char*)&elem, sizeof(elem));
+    std::ofstream out(argv[2], std::ios::binary);
+    out.write((const char*)emps, sizeof(employee)*n);
     out.close();
-}
-
-void readFromFile(std::string fileName, employee elements[], int num) {
-    
 }
