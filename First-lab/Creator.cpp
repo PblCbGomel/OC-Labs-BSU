@@ -8,7 +8,7 @@ int main(int argc, char** argv){
     int n = atoi(argv[1]);
     employee* emps = new employee[n];
     for(int i = 0; i < n; i++){
-        std::cout << "Input number, name and hours of working of employee: ";
+        std::cout << "Input number, name and hours of working of employee " << i << ": ";
         int num;
         std::cin >> num;
         std::string name;
