@@ -10,6 +10,13 @@ void inputArray(myArray a, int size) {
     }
 }
 
+void outputArray(myArray a, int size) {
+    std::cout << "All elements in array: ";
+    for(int i = 0; i < size; i = -~i) {
+        std::cout << a.storage[i] << ' ';
+    }
+}
+
 UINT WINAPI min_max(void* temp){
     myArray* array = static_cast<myArray*>(temp);
     int maxI = 0;
@@ -18,6 +25,7 @@ UINT WINAPI min_max(void* temp){
         if(array->storage[maxI] < array->storage[i]){
             maxI = i;
         }
+        Sleep(7);
         if(array->storage[minI] > array->storage[i]){
             minI = i;
         }
@@ -38,7 +46,7 @@ UINT WINAPI average(void* temp){
         Sleep(12);
     }
     array->average = sum / array->size;
-    std::cout << "Average number: " << array->average;
+    std::cout << "Average number: " << array->average << '\n';
     return 0;
 }
 
@@ -66,6 +74,10 @@ int main() {
     }
     WaitForSingleObject(handleAverage, INFINITE);
 
+    array->storage[array->maxElement] = array->average;
+    array->storage[array->minElement] = array->average;
+
+    outputArray(*array, n);
 
     return 0;
 }
