@@ -5,7 +5,7 @@
 
 void inputArray(myArray a, int size) {
     for(int i = 0; i < size; i = -~i) {
-        std::cout << "Input " << i + 1 << " element of array: ";
+        std::cout << "Input " << -~i << " element of array: ";
         std::cin >> a.storage[i];
     }
 }
@@ -30,22 +30,41 @@ UINT WINAPI min_max(void* temp){
     return 0;
 }
 
+UINT WINAPI average(void* temp){
+    myArray* array = static_cast<myArray*>(temp);
+    int sum = 0;
+    for(int i = 0; i < array->size; i = -~i){
+        sum += array->storage[i];
+        Sleep(12);
+    }
+    array->average = sum / array->size;
+    std::cout << "Average number: " << array->average;
+    return 0;
+}
+
 int main() {
     std::cout << "Input size of array: ";
     int n;
     std::cin >> n;
-    
+
     myArray* array = new myArray();
     array->storage = new int[n];
     array->size = n;
     inputArray(*array, n);
 
-    HANDLE handle_min_max =
+    HANDLE handleMinMax =
             (HANDLE) _beginthreadex(NULL, 0, min_max, array, 0, NULL);
-    if (handle_min_max == NULL) {
+    if (handleMinMax == NULL) {
         return GetLastError();
     }
-    WaitForSingleObject(handle_min_max, INFINITE);
+    WaitForSingleObject(handleMinMax, INFINITE);
+
+    HANDLE handleAverage =
+            (HANDLE) _beginthreadex(NULL, 0, average, array, 0, NULL);
+    if(handleAverage == NULL){
+        return GetLastError();
+    }
+    WaitForSingleObject(handleAverage, INFINITE);
 
 
     return 0;
