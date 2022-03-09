@@ -1,7 +1,0 @@
-Input file name: 1.bin
-Number        NameHours      Salary
-  384       Ktoto491.3       29478
-  991     Levakov129.5        7770
-  387     Nizakov 86.5        5190
-  127    Pravakov 99.1        5946
-  881    Verhakov100.1        6006
