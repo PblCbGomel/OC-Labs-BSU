@@ -3,6 +3,7 @@
 #include <vector>
 #include <windows.h>
 #include <process.h>
+#include "thread.h"
 
 
 int main() {
