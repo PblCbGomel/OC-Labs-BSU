@@ -47,8 +47,9 @@ UINT WINAPI marker(void *p) {
 
 void printArr(int* arr, int size) {
     for(int i = 0; i < size; i = -~i) {
-        std::cout << arr[i];
+        std::cout << arr[i] << " ";
     }
+    std::cout << '\n';
 }
 
 int main() {
@@ -75,6 +76,33 @@ int main() {
         thEvents.push_back(CreateEvent(NULL, TRUE, FALSE, NULL));
         argsVector.push_back(currArgs);
         threads.push_back(currTh);
+    }
+
+    int terminatedCount = 0, k;
+    while(terminatedCount != threadsCount) {
+        printArr(arr, n);
+
+        WaitForMultipleObjects(threadsCount, &thEvents[0], TRUE, INFINITE);
+
+        std::cout << "Input thread number to terminate: ";
+        std::cin >> k;
+
+        if(k <= 0 || k > threadsCount || terminated[k - 1] != 0){
+            std::cout << k << " is invalid input.\n";
+            continue;
+        }
+
+        terminated[~-k] = true;
+        SetEvent(argsVector[~-k]->actions[1]);
+        WaitForSingleObject(threads[~-k], INFINITE);
+        terminatedCount = -~terminatedCount;
+        printArr(arr, n);
+        for(int i = 0; i < threadsCount; i = -~i){
+            if(terminated[i])
+                continue;
+            ResetEvent(thEvents[i]);
+            SetEvent(argsVector[i]->actions[0]);
+        }
     }
     return 0;
 }
