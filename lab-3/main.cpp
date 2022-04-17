@@ -5,6 +5,12 @@
 #include <process.h>
 #include "thread.h"
 
+void printArr(int* arr, int size) {
+    for(int i = 0; i < size; i = -~i) {
+        std::cout << arr[i];
+    }
+}
+
 
 int main() {
     std::cout << "Input size of array: ";
