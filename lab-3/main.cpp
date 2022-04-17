@@ -23,11 +23,21 @@ int main() {
     }
 
     std::cout << "Array of " << n << " element has been created.\nInput number of thread: ";
-    int stremsCount;
-    std::cin >> stremsCount;
-    HANDLE startThreadsEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-    HANDLE currentThread;
+    int threadsCount;
+    std::cin >> threadsCount;
+    HANDLE threadStartEv = CreateEvent(NULL, TRUE, FALSE, NULL), currTh;
     std::vector<HANDLE> threads;
-
+    std::vector<threadArgs*> argsVector;
+    threadArgs* currArgs;
+    std::vector<HANDLE> thEvents;
+    bool* terminated = new bool[threadsCount];
+    for(int i = 0; i < threadsCount; i = -~i){
+        currArgs = new threadArgs(arr, n, -~i);
+        //currTh = (HANDLE)_beginthreadex(NULL, 0, marker, currArgs, 0, NULL);
+        terminated[i] = false;
+        thEvents.push_back(CreateEvent(NULL, TRUE, FALSE, NULL));
+        argsVector.push_back(currArgs);
+        threads.push_back(currTh);
+    }
     return 0;
 }
