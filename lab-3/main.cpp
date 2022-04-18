@@ -5,7 +5,7 @@
 #include <process.h>
 #include "thread.h"
 
-HANDLE threadStartEv = CreateEvent(NULL, TRUE, FALSE, NULL), currTh;
+HANDLE threadStartEv, currTh;
 std::vector<HANDLE> thEvents;
 CRITICAL_SECTION CriticalS;
 const int timeMs = 5;
@@ -23,8 +23,8 @@ UINT WINAPI marker(void *p) {
         if(p_->arr[i] != 0){
             Sleep(timeMs);
             std::cout << "Thread #" << p_->num << ": Marked " << count << " elements, unable " << i << '\n';
-            Sleep(timeMs);
             LeaveCriticalSection(&CriticalS);
+            Sleep(timeMs);
             SetEvent(thEvents[-~p_->num]);
             Sleep(timeMs);
         } else {
@@ -46,6 +46,7 @@ UINT WINAPI marker(void *p) {
 }
 
 void printArr(int* arr, int size) {
+    EnterCriticalSection(&CriticalS);
     for(int i = 0; i < size; i = -~i) {
         std::cout << arr[i] << " ";
     }
@@ -54,52 +55,64 @@ void printArr(int* arr, int size) {
 
 int main() {
     std::cout << "Input size of array: ";
-    int n;
-    std::cin >> n;
-    int *arr = new int[n];
+    int size;
+    std::cin >> size;
+    int *arr = new int[size];
 
-    for(int i = 0; i < n; i = -~i) {
+    for(int i = 0; i < size; i = -~i) {
         arr[i] = 0;
     }
 
-    std::cout << "Array of " << n << " element has been created.\nInput number of thread: ";
+    std::cout << "Array of " << size << " element has been created.\nInput number of thread market: ";
+
     int threadsCount;
     std::cin >> threadsCount;
+    threadStartEv = CreateEvent(NULL, TRUE, FALSE, NULL);
+
     std::vector<HANDLE> threads;
     std::vector<threadArgs*> argsVector;
     threadArgs* currArgs;
+
     bool* terminated = new bool[threadsCount];
+
     for(int i = 0; i < threadsCount; i = -~i){
-        currArgs = new threadArgs(arr, n, -~i);
+        currArgs = new threadArgs(arr, size, -~i);
         currTh = (HANDLE)_beginthreadex(NULL, 0, marker, currArgs, 0, NULL);
+
         terminated[i] = false;
         thEvents.push_back(CreateEvent(NULL, TRUE, FALSE, NULL));
         argsVector.push_back(currArgs);
         threads.push_back(currTh);
     }
 
-    int terminatedCount = 0, k;
+    int terminatedCount = 0;
+    InitializeCriticalSection(&CriticalS);
+    PulseEvent(threadStartEv);
+
     while(terminatedCount != threadsCount) {
-        printArr(arr, n);
-
         WaitForMultipleObjects(threadsCount, &thEvents[0], TRUE, INFINITE);
+        printArr(arr, size);
 
+        int threadNumToTerminate;
         std::cout << "Input thread number to terminate: ";
-        std::cin >> k;
+        std::cin >> threadNumToTerminate;
 
-        if(k <= 0 || k > threadsCount || terminated[k - 1] != 0){
-            std::cout << k << " is invalid input.\n";
+        if(threadNumToTerminate <= 0 || threadNumToTerminate > threadsCount || terminated[threadNumToTerminate - 1] != 0){
+            std::cout << threadNumToTerminate << " is invalid input. Try again.\n";
             continue;
         }
 
-        terminated[~-k] = true;
-        SetEvent(argsVector[~-k]->actions[1]);
-        WaitForSingleObject(threads[~-k], INFINITE);
+        terminated[~-threadNumToTerminate] = true;
+        SetEvent(argsVector[~-threadNumToTerminate]->actions[1]);
+        WaitForSingleObject(threads[~-threadNumToTerminate], INFINITE);
         terminatedCount = -~terminatedCount;
-        printArr(arr, n);
+
+        printArr(arr, size);
+
         for(int i = 0; i < threadsCount; i = -~i){
-            if(terminated[i])
+            if(terminated[i]) {
                 continue;
+            }
             ResetEvent(thEvents[i]);
             SetEvent(argsVector[i]->actions[0]);
         }
