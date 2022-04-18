@@ -33,6 +33,9 @@ UINT WINAPI marker(void *p) {
             count = -~count;
             LeaveCriticalSection(&CriticalS);
             Sleep(timeMs);
+            if(action == 1) {
+                break;
+            }
         }
     }
     for(int i = 0; i < p_->n; i = -~i){
