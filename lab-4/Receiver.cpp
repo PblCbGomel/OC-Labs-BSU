@@ -3,21 +3,21 @@
 #include <conio.h>
 #include <windows.h>
 #include <string>
-#include <wsman.h>
 
 HANDLE *readyEvents;
 const int messageSize = 20;
+const double INF = INFINITE;
 
 int CreateSenders(int sendersCount, std::string fileName){
 
     readyEvents = new HANDLE[sendersCount];
     char buff[10];
 
-    for(int i = 0; i < sendersCount; i++){
+    for(int i = 0; i < sendersCount; ++i){
 
         std::string eventName = "sender";
         eventName += std::string(itoa(i, buff, 10));
-        readyEvents[i] = CreateEvent(NULL, TRUE, FALSE, eventName.c_str());
+        readyEvents[i] = CreateEvent(NULL, 1, 0, eventName.c_str());
 
         if (readyEvents[i] == NULL) {
             std::cout << "Creating of event has failed.";
@@ -35,8 +35,10 @@ int CreateSenders(int sendersCount, std::string fileName){
         char* copySenderEXE;
         strcpy(copySenderEXE, senderEXE.c_str());
 
-        if (CreateProcess(NULL, copySenderEXE, NULL, NULL, FALSE,
-                          CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi) == true) {
+        if (CreateProcess(NULL, copySenderEXE,
+                          NULL, NULL, 0,
+                          CREATE_NEW_CONSOLE, NULL,
+                          NULL, &si, &pi) == 1) {
             std::cout <<"Creating process error.\n";
 
             CloseHandle(pi.hProcess);
@@ -89,23 +91,25 @@ int main() {
     in.clear();
     in.close();
 
-    HANDLE startAll = CreateEvent(NULL, TRUE, FALSE, "START_ALL");
-    HANDLE fileMutex = CreateMutex(NULL, FALSE, "FILE_ACCESS");
+    HANDLE startAll = CreateEvent(NULL, 1, 0, "START_ALL");
+    HANDLE fileMutex = CreateMutex(NULL, 0, "FILE_ACCESS");
 
     if(fileMutex == NULL) {
         std::cout << "Error in mutex creation.";
         return GetLastError();
     }
 
-    HANDLE senderSemaphore = CreateSemaphore(NULL, 0, senderCount, "MESSAGES_COUNT_SEM");
-    HANDLE mesReadEvent = CreateEvent(NULL, FALSE, FALSE, "MESSAGE_READ");
+    HANDLE senderSemaphore = CreateSemaphore(NULL, 0,
+                                             senderCount, "MESSAGES_COUNT_SEM");
+    HANDLE mesReadEvent = CreateEvent(NULL, 0,
+                                      0, "MESSAGE_READ");
 
     if (senderSemaphore == NULL || mesReadEvent == NULL) {
         return GetLastError();
     }
 
     CreateSenders(senderCount, fileName);
-    WaitForMultipleObjects(senderCount, readyEvents, TRUE, INFINITE);
+    WaitForMultipleObjects(senderCount, readyEvents, 1, INF);
 
     std::cout << "All senders are ready. Starting." << std::endl;
     SetEvent(startAll);
@@ -118,9 +122,12 @@ int main() {
 
         if(std::cin.eof() == false) {
             std::cout << "Waiting for a message." << std::endl;
-            WaitForSingleObject(senderSemaphore, INFINITE);
-            WaitForSingleObject(fileMutex, INFINITE);
+
+            WaitForSingleObject(senderSemaphore, INF);
+            WaitForSingleObject(fileMutex, INF);
+
             std::cout << receiveMessage(fileName) << '\n';
+
             ReleaseMutex(fileMutex);
             SetEvent(mesReadEvent);
         } else {
