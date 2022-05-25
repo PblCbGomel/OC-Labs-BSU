@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
-project(Lab5)
+project(Server)
 
 set(CMAKE_CXX_STANDARD 98)
 
-add_executable(Lab5 main.cpp)
+add_executable(Server main.cpp ../employee.h)
