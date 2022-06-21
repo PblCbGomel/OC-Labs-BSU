@@ -4,6 +4,10 @@
 
 std::mutex markerMutex;
 
+int getRandomNumber() {
+    return ((rand() * 10000 / 5 + 123) % 65 * 8 % 123 * 902 / 2 + 12345) % 100;
+}
+
 void printArray(std::vector<int> arr){
     std::lock_guard<std::mutex> lk(markerMutex);
     int size = arr.size();
